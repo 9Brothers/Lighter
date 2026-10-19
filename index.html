@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17191e">
+  <meta name="description" content="Transforme toda a sua tela em uma luz ajustável. Privado, gratuito e offline.">
+  <title>Lighter — Sua tela, sua luz</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/lighting.js"></script>
+  <script src="js/profiles.js"></script>
+  <script src="js/storage.js"></script>
+  <script>window.lighterInitial = LighterStorage.load(); document.documentElement.style.setProperty('--light', Lighting.displayColor(window.lighterInitial.settings));</script>
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <main id="panel" aria-label="Controles de iluminação">
+    <header><div class="brand"><span class="logo" aria-hidden="true">✳</span><div><h1>lighter<span>®</span></h1><p>SUA TELA, SUA LUZ.</p></div></div><button id="hide" class="icon-button" title="Ocultar controles (H)" aria-label="Ocultar controles">−</button></header>
+    <div class="status-line"><span class="dot"></span> ESTÚDIO DE LUZ <span id="current-profile">Ajuste livre</span></div>
+    <div class="tabs" role="group" aria-label="Modo de iluminação"><button id="temperature-mode" aria-pressed="true">Temperatura</button><button id="custom-mode" aria-pressed="false">Cor personalizada</button></div>
+    <section id="temperature-section" aria-label="Temperatura">
+      <div class="control-heading"><label for="temperature">Temperatura de cor</label><output id="temperature-value" for="temperature"></output></div>
+      <input id="temperature" type="range" min="2000" max="7500" step="50" class="temperature-range">
+      <div class="scale"><span>Quente</span><span>Fria</span></div>
+      <div class="quick" id="temperature-presets"></div>
+    </section>
+    <section id="custom-section" aria-label="Cor personalizada" hidden>
+      <div class="control-heading"><label for="hex">Sua cor</label><output id="rgb-value"></output></div>
+      <div class="color-inputs"><input id="color" type="color" aria-label="Selecionar cor"><input id="hex" type="text" maxlength="7" pattern="#[0-9A-Fa-f]{6}" aria-label="Cor hexadecimal" spellcheck="false"><span>HEX</span></div>
+      <div id="color-presets" class="swatches" aria-label="Cores rápidas"></div>
+    </section>
+    <section aria-label="Intensidade">
+      <div class="control-heading"><label for="intensity">Intensidade</label><output id="intensity-value" for="intensity"></output></div>
+      <input id="intensity" type="range" min="0" max="100" step="1" class="intensity-range">
+      <div class="scale"><span>◔ Suave</span><span>Máxima ☼</span></div>
+      <div class="quick" id="intensity-presets"></div>
+    </section>
+    <section class="profiles-section"><div class="control-heading"><h2>Seus perfis</h2><button id="manage" class="text-button">Gerenciar ↗</button></div><div id="favorite-profiles" class="favorite-profiles"></div><button id="save-profile" class="save-button">＋ Salvar configuração como perfil</button></section>
+    <div class="primary-actions"><button id="fullscreen">⛶ <span>Tela cheia</span><kbd>F</kbd></button><button id="clean">Só luz <span>↗</span></button></div>
+    <footer><span>100% luz. Sem distrações.</span><button id="preferences-button" class="text-button" aria-label="Preferências e atalhos">Configurações</button></footer>
+  </main>
+  <dialog id="profiles-dialog" aria-labelledby="profiles-title"><div class="dialog-heading"><div><p class="eyebrow">DO SEU JEITO</p><h2 id="profiles-title">Biblioteca de luz</h2></div><button class="close icon-button" aria-label="Fechar">×</button></div><p class="muted">Aplique um perfil ou salve explicitamente seus ajustes nele.</p><div id="profile-list"></div><div class="import-export"><button id="export">Exportar JSON</button><label class="file-button">Importar JSON<input id="import-file" type="file" accept="application/json,.json"></label><select id="import-mode" aria-label="Modo de importação"><option value="merge">Mesclar perfis</option><option value="replace">Substituir coleção</option></select></div></dialog>
+  <dialog id="preferences-dialog" aria-labelledby="preferences-title"><div class="dialog-heading"><h2 id="preferences-title">Configurações</h2><button class="close icon-button" aria-label="Fechar">×</button></div><label class="setting"><span>Ocultar controles após 3 segundos</span><input id="auto-hide" type="checkbox"></label><label class="setting"><span>Transições suaves</span><input id="smooth" type="checkbox"></label><label class="setting"><span>Ao iniciar</span><select id="startup"><option value="last-used">Restaurar últimos ajustes</option><option value="default-profile">Usar perfil padrão</option></select></label><p id="default-description" class="muted"></p><h3>Atalhos de teclado</h3><dl class="shortcuts"><dt>F</dt><dd>Tela cheia</dd><dt>H</dt><dd>Ocultar / mostrar controles</dd><dt>S</dt><dd>Abrir perfis</dd><dt>↑ / ↓</dt><dd>Intensidade ±5%</dd><dt>← / →</dt><dd>Temperatura ±100K</dd><dt>1–5</dt><dd>Primeiros cinco favoritos</dd><dt>Escape</dt><dd>Fechar painel / sair da tela cheia</dd></dl><p class="notice">A intensidade é simulada pelas cores exibidas. O brilho físico é ajustado no monitor ou no sistema. A luz percebida depende da tecnologia, do brilho e da calibração da tela. Os perfis são sugestões, não calibrações profissionais.</p><p class="muted">Funciona offline. Seus ajustes ficam apenas neste navegador.</p></dialog>
+  <dialog id="name-dialog" aria-labelledby="name-title"><form id="name-form"><div class="dialog-heading"><h2 id="name-title">Salvar perfil</h2><button type="button" class="close icon-button" aria-label="Fechar">×</button></div><label for="profile-name">Nome do perfil</label><input id="profile-name" type="text" maxlength="100" required autocomplete="off"><div class="form-actions"><button type="button" class="close">Cancelar</button><button type="submit" class="accent">Salvar</button></div></form></dialog>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
